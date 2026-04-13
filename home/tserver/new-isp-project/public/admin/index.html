@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ISP Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f4f7fc;
+            --sidebar-bg: #1e2a3a;
+            --card: white;
+            --text: #1e2a3a;
+            --border: #cbd5e1;
+            --btn: #3b82f6;
+            --btn-hover: #2563eb;
+            --input-bg: white;
+            --table-header: #f2f2f2;
+            --whatsapp: #25D366;
+        }
+        body.dark {
+            --bg: #0f172a;
+            --sidebar-bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+            --border: #334155;
+            --btn: #3b82f6;
+            --btn-hover: #60a5fa;
+            --input-bg: #334155;
+            --table-header: #2d3e4f;
+            --whatsapp: #25D366;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex;
+            align-items: center; justify-content: center; z-index: 1000;
+        }
+        .login-box {
+            background: var(--card); padding: 30px; border-radius: 8px; width: 300px;
+            text-align: center;
+        }
+        .sidebar {
+            width: 250px; background: var(--sidebar-bg); color: white;
+            padding-top: 20px; display: none; flex-direction: column;
+        }
+        .sidebar h2 { text-align: center; margin-bottom: 20px; font-size: 20px; }
+        .sidebar a {
+            padding: 15px 20px; color: #cbd5e1; text-decoration: none;
+            display: block; border-left: 4px solid transparent;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #334155; border-left: 4px solid var(--btn); color: white;
+        }
+        .main-content {
+            flex: 1; padding: 20px; overflow-y: auto; display: none;
+        }
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: var(--card); padding: 20px; border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: var(--btn); color: white; padding: 15px;
+            border-radius: 8px; text-align: center;
+        }
+        .stat-box h3 { font-size: 24px; margin-top: 10px; }
+        .chart-container {
+            max-width: 100%;
+            width: 100%;
+            margin: 0 auto;
+        }
+        canvas {
+            max-height: 300px;
+            width: 100%;
+        }
+        table { width: 100%; border-collapse: collapse; overflow-x: auto; display: block; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--table-header); }
+        button {
+            background: var(--btn); color: white; border: none; padding: 8px 16px;
+            border-radius: 4px; cursor: pointer;
+        }
+        button:hover { background: var(--btn-hover); }
+        button.danger { background: #ef4444; }
+        button.danger:hover { background: #dc2626; }
+        button.success { background: #10b981; }
+        button.success:hover { background: #059669; }
+        button.whatsapp { background: #25D366; }
+        button.whatsapp:hover { background: #128C7E; }
+        input, select {
+            padding: 8px; border: 1px solid var(--border); border-radius: 4px;
+            background: var(--input-bg); color: var(--text); margin-bottom: 10px;
+            width: 100%; box-sizing: border-box;
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        .role-badge { font-size: 12px; padding: 2px 6px; border-radius: 4px; background: #fbbf24; color: black; }
+        .flex-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .sidebar h2, .sidebar a span:not(.icon) { display: none; }
+            .main-content { margin-left: 70px; }
+            .grid-4 { grid-template-columns: 1fr 1fr; }
+            .stat-box h3 { font-size: 18px; }
+            th, td { padding: 8px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <div class="login-box">
+        <h2 style="margin-bottom: 20px;">ISP Admin Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()" style="width: 100%">Login</button>
+        <p id="login-err" style="color: red; margin-top: 10px; display: none;">Invalid credentials</p>
+    </div>
+</div>
+
+<div class="sidebar" id="sidebar">
+    <h2>ISP SaaS <span id="userRole" class="role-badge"></span></h2>
+    <a href="#" onclick="showSection('dashboard', event)" class="active">Dashboard</a>
+    <a href="#" onclick="showSection('customers', event)">Customers</a>
+    <a href="#" onclick="showSection('suspended', event)">Suspended Users</a>
+    <a href="#" onclick="showSection('devices', event)">Devices & Requests</a>
+    <a href="#" onclick="showSection('vouchers', event)">Vouchers</a>
+    <a href="#" onclick="showSection('voucher-requests', event)">Voucher Requests</a>
+    <a href="#" onclick="showSection('sellers', event)">Sellers (Agents)</a>
+    <a href="#" onclick="showSection('subadmins', event)" id="menuSubadmin">Sub Admins</a>
+    <a href="#" onclick="showSection('servers', event)">Mikrotik Servers</a>
+    <a href="#" onclick="showSection('monthly', event)">Monthly Closing</a>
+    <a href="#" onclick="showSection('create', event)">Create New...</a>
+</div>
+
+<div class="main-content" id="main-content">
+    <div class="header">
+        <h1 id="pageTitle">Dashboard</h1>
+        <div>
+            <button id="toggleMode">🌙 Dark Mode</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div id="dashboard" class="section active">
+        <div class="grid-4" id="statsGrid">
+            <div class="stat-box">Total Customers<h3 id="statCust">0</h3></div>
+            <div class="stat-box">Devices<h3 id="statDev">0</h3></div>
+            <div class="stat-box">Sellers<h3 id="statSel">0</h3></div>
+            <div class="stat-box" style="background: #10b981;">Total Sales<h3 id="statSales">$0</h3></div>
+        </div>
+        <div class="card">
+            <h3>Revenue (Last 6 Months)</h3>
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h3>Customer Status</h3>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customers Section (with Delete button) -->
+    <div id="customers" class="section">
+        <div class="card">
+            <table style="overflow-x:auto;">
+                <thead>
+                     <tr>
+                        <th>ID</th><th>Phone</th><th>Name</th><th>Balance</th><th>Status</th><th>Expiry</th><th>Seller</th>
+                        <th>Sub Admin</th><th>Actions</th>
+                     </tr>
+                </thead>
+                <tbody id="custTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Suspended Customers -->
+    <div id="suspended" class="section">
+        <div class="card">
+            <table style="overflow-x:auto;">
+                <thead>
+                     <tr><th>Phone</th><th>Name</th><th>Expired On</th><th>Seller</th><th>Sub Admin</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="suspTableBody"></tbody>
+            <tr>
+        </div>
+    </div>
+
+    <!-- Devices & Requests -->
+    <div id="devices" class="section">
+        <div class="card">
+            <h3>Pending Device Requests</h3>
+            <table style="overflow-x:auto;">
+                <thead><tr><th>Customer Phone</th><th>MAC Address</th><th>Device Name</th><th>Action</th></tr></thead>
+                <tbody id="pendDevTableBody"></tbody>
+            </table>
+            <h3>All Devices</h3>
+            <table style="overflow-x:auto;">
+                <thead><tr><th>Customer Phone</th><th>MAC Address</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="allDevTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Vouchers -->
+    <div id="vouchers" class="section">
+        <div class="card">
+            <div class="flex-buttons" style="margin-bottom: 15px;">
+                <button onclick="deleteSelectedVouchers('unused')" class="danger">Delete Selected Unused</button>
+                <button onclick="deleteSelectedVouchers('used')" class="danger">Delete Selected Used</button>
+            </div>
+            <table style="overflow-x:auto;">
+                <thead>
+                     <tr>
+                        <th><input type="checkbox" id="selectAllVouchers" onclick="toggleSelectAll()"></th>
+                        <th>PIN</th><th>Days</th><th>Price</th><th>Seller</th><th>Status</th>
+                     </tr>
+                </thead>
+                <tbody id="vouchTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Voucher Requests -->
+    <div id="voucher-requests" class="section">
+        <div class="card">
+            <table style="overflow-x:auto;">
+                <thead><tr><th>Seller</th><th>Quantity</th><th>Days</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="vreqTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sellers -->
+    <div id="sellers" class="section">
+        <div class="card">
+            <table style="overflow-x:auto;">
+                <thead><tr><th>Name</th><th>Username</th><th>Phone</th><th>Commission</th><th>Sub Admin</th><th>Action</th></tr></thead>
+                <tbody id="sellerTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Sub Admins -->
+    <div id="subadmins" class="section">
+        <div class="card">
+            <table style="overflow-x:auto;">
+                <thead><tr><th>Username</th><th>Phone</th><th>Commission Rate</th><th>Action</th></tr></thead>
+                <tbody id="subadminTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MikroTik Servers -->
+    <div id="servers" class="section">
+        <div class="card">
+            <h3>Add New Server</h3>
+            <form id="addServerForm" style="margin-bottom: 20px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <input type="text" id="serverName" placeholder="Name" required style="flex:1;">
+                    <input type="text" id="serverIP" placeholder="IP Address" required style="flex:1;">
+                    <input type="number" id="serverPort" placeholder="Port" value="8728" style="flex:0.5;">
+                    <input type="text" id="serverUsername" placeholder="Username (optional)" style="flex:1;">
+                    <input type="password" id="serverPassword" placeholder="Password (optional)" style="flex:1;">
+                    <input type="text" id="serverSecret" placeholder="RADIUS Secret" required style="flex:1;">
+                    <select id="serverStatus" style="flex:0.5;">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <button type="button" onclick="addServer()">Add Server</button>
+                </div>
+            </form>
+            <div id="serversList">
+                <h3>Your Servers</h3>
+                <table style="overflow-x:auto;">
+                    <thead><tr><th>Name</th><th>IP</th><th>Port</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody id="serverTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Closing -->
+    <div id="monthly" class="section">
+        <div class="card">
+            <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                <select id="monthYear"><option value="2026">2026</option></select>
+                <select id="monthMonth"></select>
+                <button onclick="loadMonthly()">View</button>
+            </div>
+            <div class="grid-4" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="stat-box" style="background:#4b5563">Total Sales<h3 id="mSales">0</h3></div>
+                <div class="stat-box" style="background:#10b981">Collected<h3 id="mCol">0</h3></div>
+                <div class="stat-box" style="background:#ef4444">Pending<h3 id="mPend">0</h3></div>
+            </div>
+            <input type="number" id="colAmount" placeholder="Amount to collect" style="width:200px; display:inline-block">
+            <button onclick="recordCollection()">Record Collection</button>
+        </div>
+    </div>
+
+    <!-- Create New -->
+    <div id="create" class="section">
+        <div class="card" style="max-width: 500px; margin: 0 auto;">
+            <select id="createType" onchange="toggleCreateForm()">
+                <option value="customer">New Customer</option>
+                <option value="seller">New Seller</option>
+                <option value="voucher">Generate Vouchers</option>
+                <option value="recharge">Recharge Customer</option>
+                <option value="subadmin" id="optSubadmin">New Sub Admin</option>
+            </select>
+
+            <div id="form-customer">
+                <input type="text" id="custPhone" placeholder="Phone Number">
+                <input type="text" id="custName" placeholder="Full Name">
+                <input type="text" id="custAddress" placeholder="Address">
+                <button onclick="createEntity('customer')">Create Customer</button>
+            </div>
+
+            <div id="form-seller" style="display:none">
+                <input type="text" id="selName" placeholder="Name">
+                <input type="text" id="selPhone" placeholder="Phone">
+                <input type="text" id="selUser" placeholder="Username">
+                <input type="password" id="selPass" placeholder="Password">
+                <select id="selCommType"><option value="percent">Percent</option><option value="fixed">Fixed</option></select>
+                <input type="number" id="selCommVal" placeholder="Commission Value">
+                <button onclick="createEntity('seller')">Create Seller</button>
+            </div>
+
+            <div id="form-voucher" style="display:none">
+                <select id="createVoucherSeller"></select>
+                <input type="number" id="vouchDays" placeholder="Days Valid (e.g. 30)">
+                <input type="number" id="vouchPrice" placeholder="Price">
+                <input type="number" id="vouchQty" placeholder="Quantity">
+                <button onclick="createEntity('voucher')">Generate Vouchers</button>
+            </div>
+
+            <div id="form-recharge" style="display:none">
+                <input type="text" id="rechargePhone" placeholder="Customer Phone Number">
+                <input type="text" id="rechargePin" placeholder="Voucher PIN">
+                <button onclick="rechargeCustomer()">Recharge</button>
+                <div id="rechargeMsg" style="margin-top:10px"></div>
+            </div>
+
+            <div id="form-subadmin" style="display:none">
+                <input type="text" id="subUser" placeholder="Username">
+                <input type="password" id="subPass" placeholder="Password">
+                <input type="text" id="subPhone" placeholder="Phone">
+                <input type="email" id="subEmail" placeholder="Email">
+                <input type="number" id="subCommValue" placeholder="Commission Rate (%)">
+                <button onclick="createEntity('subadmin')">Create Sub Admin</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const API_BASE = '';
+    let adminId = null;
+    let adminRole = '';
+    let subAdminsList = [];
+    let revenueChart = null;
+    let statusChart = null;
+
+    // ========== LOGIN ==========
+    async function login() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const errEl = document.getElementById('login-err');
+        errEl.style.display = 'none';
+
+        if (!username || !password) {
+            errEl.textContent = 'Username and password are required';
+            errEl.style.display = 'block';
+            return;
+        }
+
+        try {
+            const res = await fetch('/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                errEl.textContent = data.error || 'Invalid credentials';
+                errEl.style.display = 'block';
+                return;
+            }
+
+            const data = await res.json();
+            adminId = data.adminId;
+            adminRole = data.role;
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'flex';
+            document.getElementById('main-content').style.display = 'block';
+            document.getElementById('userRole').textContent = adminRole;
+
+            if (adminRole === 'sub_admin') {
+                document.getElementById('menuSubadmin').style.display = 'none';
+                document.getElementById('optSubadmin').style.display = 'none';
+            }
+
+            loadDashboard();
+            populateSellerSelect();
+            loadSubAdminsList();
+            loadServers();
+        } catch (error) {
+            errEl.textContent = 'Unable to reach backend (check server).';
+            errEl.style.display = 'block';
+            console.error('Login failed', error);
+        }
+    }
+
+    function logout() { location.reload(); }
+
+    function showSection(id, evt) {
+        evt?.preventDefault();
+        const target = evt?.target || window.event?.target || window.event?.srcElement;
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+        if (target && target.classList) target.classList.add('active');
+        document.getElementById('pageTitle').textContent = target?.innerText || id;
+
+        if (id === 'dashboard') loadDashboard();
+        if (id === 'customers') loadCustomers();
+        if (id === 'suspended') loadSuspended();
+        if (id === 'devices') loadDevices();
+        if (id === 'vouchers') loadVouchers();
+        if (id === 'voucher-requests') loadVoucherRequests();
+        if (id === 'sellers') loadSellers();
+        if (id === 'subadmins' && adminRole !== 'sub_admin') loadSubAdmins();
+        if (id === 'servers') loadServers();
+    }
+
+    function toggleCreateForm() {
+        const type = document.getElementById('createType').value;
+        ['customer', 'seller', 'voucher', 'recharge', 'subadmin'].forEach(t => {
+            const el = document.getElementById(`form-${t}`);
+            if (el) el.style.display = t === type ? 'block' : 'none';
+        });
+    }
+
+    // ========== DASHBOARD & CHARTS ==========
+    async function loadDashboard() {
+        const res = await fetch(`/admin/dashboard-stats?admin_id=${adminId}`);
+        if (res.ok) {
+            const data = await res.json();
+            document.getElementById('statCust').innerText = data.total_customers;
+            document.getElementById('statDev').innerText = data.total_devices;
+            document.getElementById('statSel').innerText = data.total_sellers;
+            document.getElementById('statSales').innerText = '$' + data.total_sales_value;
+        }
+        loadRevenueChart();
+        loadStatusChart();
+    }
+
+    async function loadRevenueChart() {
+        const months = [];
+        const sales = [];
+        const now = new Date();
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const year = d.getFullYear();
+            const month = d.getMonth() + 1;
+            months.push(`${year}-${month}`);
+            const res = await fetch(`/admin/monthly-closing?admin_id=${adminId}&year=${year}&month=${month}`);
+            const data = await res.json();
+            sales.push(data.total_sales || 0);
+        }
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (revenueChart) revenueChart.destroy();
+        revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Revenue (SAR)',
+                    data: sales,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+    }
+
+    async function loadStatusChart() {
+        const res = await fetch(`/admin/customers?admin_id=${adminId}`);
+        const customers = await res.json();
+        const active = customers.filter(c => c.status === 'active').length;
+        const suspended = customers.filter(c => c.status === 'suspended').length;
+        const ctx = document.getElementById('statusChart').getContext('2d');
+        if (statusChart) statusChart.destroy();
+        statusChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Active', 'Suspended'],
+                datasets: [{
+                    data: [active, suspended],
+                    backgroundColor: ['#10b981', '#ef4444'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+
+    // ========== CUSTOMER FUNCTIONS (with delete) ==========
+    function formatPhoneForWhatsApp(phone) {
+        let p = phone.trim();
+        if (p.startsWith('0')) p = p.substring(1);
+        if (!p.startsWith('966')) p = '966' + p;
+        return p;
+    }
+
+    function getWhatsAppUrl(customer) {
+        const phone = formatPhoneForWhatsApp(customer.phone);
+        const expiry = customer.expiry_date ? new Date(customer.expiry_date).toLocaleDateString() : 'soon';
+        const balance = customer.balance ? '$' + customer.balance : '$0';
+        const message = `Hello ${customer.name}, your internet service will expire on ${expiry}. Your current balance is ${balance}. Please recharge to continue. Thank you.`;
+        return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    }
+
+    function openWhatsApp(customer) {
+        window.open(getWhatsAppUrl(customer), '_blank');
+    }
+
+    async function loadCustomers() {
+        const res = await fetch(`/admin/customers?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('custTableBody');
+        tbody.innerHTML = '';
+        for (const c of data) {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = c.id;
+            row.insertCell(1).innerText = c.phone;
+            row.insertCell(2).innerText = c.name;
+            row.insertCell(3).innerText = c.balance ? '$' + c.balance : '$0';
+            row.insertCell(4).innerHTML = `<span class="role-badge" style="background:${c.status==='active'?'#10b981':'#ef4444'}">${c.status}</span>`;
+            row.insertCell(5).innerText = c.expiry_date ? new Date(c.expiry_date).toLocaleDateString() : 'N/A';
+            row.insertCell(6).innerText = c.assigned_seller_name || '-';
+            row.insertCell(7).innerText = c.assigned_sub_admin_name || '-';
+            const btnCell = row.insertCell(8);
+            const assignSubAdminBtn = document.createElement('button');
+            assignSubAdminBtn.innerText = 'Assign SubAdmin';
+            assignSubAdminBtn.classList.add('success');
+            assignSubAdminBtn.onclick = () => assignCustomerToSubAdmin(c.id);
+            const rechargeBtn = document.createElement('button');
+            rechargeBtn.innerText = 'Recharge';
+            rechargeBtn.classList.add('success');
+            rechargeBtn.onclick = () => promptRecharge(c.phone);
+            const extendBtn = document.createElement('button');
+            extendBtn.innerText = 'Extend';
+            extendBtn.classList.add('success');
+            extendBtn.onclick = () => extendCustomer(c.id);
+            const waBtn = document.createElement('button');
+            waBtn.innerText = 'WhatsApp';
+            waBtn.classList.add('whatsapp');
+            waBtn.onclick = () => openWhatsApp(c);
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerText = 'Delete';
+            deleteBtn.classList.add('danger');
+            deleteBtn.onclick = () => deleteCustomer(c.id);
+            btnCell.appendChild(assignSubAdminBtn);
+            btnCell.appendChild(rechargeBtn);
+            btnCell.appendChild(extendBtn);
+            btnCell.appendChild(waBtn);
+            btnCell.appendChild(deleteBtn);
+        }
+    }
+
+    async function loadSuspended() {
+        const res = await fetch(`/admin/suspended-customers?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('suspTableBody');
+        tbody.innerHTML = '';
+        for (const c of data) {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = c.phone;
+            row.insertCell(1).innerText = c.name;
+            row.insertCell(2).innerText = c.expiry_date ? new Date(c.expiry_date).toLocaleDateString() : 'N/A';
+            row.insertCell(3).innerText = c.assigned_seller_name || '-';
+            row.insertCell(4).innerText = c.assigned_sub_admin_name || '-';
+            const btnCell = row.insertCell(5);
+            const assignSubAdminBtn = document.createElement('button');
+            assignSubAdminBtn.innerText = 'Assign SubAdmin';
+            assignSubAdminBtn.classList.add('success');
+            assignSubAdminBtn.onclick = () => assignCustomerToSubAdmin(c.id);
+            const rechargeBtn = document.createElement('button');
+            rechargeBtn.innerText = 'Recharge';
+            rechargeBtn.classList.add('success');
+            rechargeBtn.onclick = () => promptRecharge(c.phone);
+            const extendBtn = document.createElement('button');
+            extendBtn.innerText = 'Extend';
+            extendBtn.classList.add('success');
+            extendBtn.onclick = () => extendCustomer(c.id);
+            const waBtn = document.createElement('button');
+            waBtn.innerText = 'WhatsApp';
+            waBtn.classList.add('whatsapp');
+            waBtn.onclick = () => openWhatsApp(c);
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerText = 'Delete';
+            deleteBtn.classList.add('danger');
+            deleteBtn.onclick = () => deleteCustomer(c.id);
+            btnCell.appendChild(assignSubAdminBtn);
+            btnCell.appendChild(rechargeBtn);
+            btnCell.appendChild(extendBtn);
+            btnCell.appendChild(waBtn);
+            btnCell.appendChild(deleteBtn);
+        }
+    }
+
+    async function deleteCustomer(customerId) {
+        if (confirm('Are you sure you want to delete this customer? All associated devices and logs will also be deleted.')) {
+            const res = await fetch('/admin/delete-customer', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId, customer_id: customerId })
+            });
+            const data = await res.json();
+            alert(data.message || data.error);
+            if (res.ok) {
+                loadCustomers();
+                loadSuspended();
+                loadDashboard();
+            }
+        }
+    }
+
+    async function assignCustomerToSubAdmin(customerId) {
+        const subAdmins = await fetch(`/admin/subadmins?admin_id=${adminId}`).then(r => r.json());
+        if (subAdmins.length === 0) {
+            alert('No sub admins available to assign');
+            return;
+        }
+        const subId = prompt(`Select sub admin:\n${subAdmins.map(s => `${s.id} - ${s.username}`).join('\n')}\nEnter ID:`);
+        if (!subId) return;
+        const res = await fetch('/admin/assign-customer-to-subadmin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_id: adminId, customer_id: customerId, sub_admin_id: subId })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if (res.ok) {
+            loadCustomers();
+            loadSuspended();
+        }
+    }
+
+    async function extendCustomer(customerId) {
+        const days = prompt("Enter days to extend:");
+        if (days) {
+            const res = await fetch('/admin/extend-customer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId, customer_id: customerId, days })
+            });
+            if (res.ok) {
+                loadCustomers();
+                loadSuspended();
+            }
+        }
+    }
+
+    async function promptRecharge(phone) {
+        const pin = prompt("Enter voucher PIN:");
+        if (pin) await rechargeCustomer(phone, pin);
+    }
+
+    async function rechargeCustomer(phone, pin) {
+        const res = await fetch('/recharge', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, pin_code: pin })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            alert(`Recharge successful! New balance: $${data.new_balance}`);
+            loadCustomers();
+            loadSuspended();
+            if (document.getElementById('rechargeMsg')) document.getElementById('rechargeMsg').innerText = 'Recharge successful';
+        } else {
+            alert(data.error || 'Recharge failed');
+            if (document.getElementById('rechargeMsg')) document.getElementById('rechargeMsg').innerText = data.error;
+        }
+    }
+
+    // ========== DEVICES ==========
+    async function loadDevices() {
+        let res = await fetch(`/admin/pending-devices?admin_id=${adminId}`);
+        let data = await res.json();
+        let tbody = document.getElementById('pendDevTableBody');
+        tbody.innerHTML = '';
+        data.forEach(d => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = d.phone;
+            row.insertCell(1).innerText = d.mac_address;
+            row.insertCell(2).innerText = d.device_name;
+            const btnApprove = document.createElement('button');
+            btnApprove.innerText = 'Approve';
+            btnApprove.onclick = () => approveDevice(d.id);
+            const btnReject = document.createElement('button');
+            btnReject.innerText = 'Reject';
+            btnReject.classList.add('danger');
+            btnReject.onclick = () => deleteDevice(d.id);
+            const cell = row.insertCell(3);
+            cell.appendChild(btnApprove);
+            cell.appendChild(btnReject);
+        });
+
+        res = await fetch(`/admin/devices?admin_id=${adminId}`);
+        data = await res.json();
+        tbody = document.getElementById('allDevTableBody');
+        tbody.innerHTML = '';
+        data.forEach(d => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = d.phone;
+            row.insertCell(1).innerText = d.mac_address;
+            row.insertCell(2).innerText = d.is_approved ? 'Approved' : 'Pending';
+            const btnDel = document.createElement('button');
+            btnDel.innerText = 'Delete';
+            btnDel.classList.add('danger');
+            btnDel.onclick = () => deleteDevice(d.id);
+            row.insertCell(3).appendChild(btnDel);
+        });
+    }
+
+    async function approveDevice(deviceId) {
+        await fetch('/admin/approve-device', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_id: deviceId })
+        });
+        loadDevices();
+    }
+
+    async function deleteDevice(deviceId) {
+        if (confirm("Delete device?")) {
+            await fetch('/admin/delete-device', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device_id: deviceId })
+            });
+            loadDevices();
+        }
+    }
+
+    // ========== VOUCHERS ==========
+    async function loadVouchers() {
+        const res = await fetch(`/admin/vouchers?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('vouchTableBody');
+        tbody.innerHTML = '';
+        data.forEach(v => {
+            const row = tbody.insertRow();
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'vouch-check';
+            cb.value = v.id;
+            row.insertCell(0).appendChild(cb);
+            row.insertCell(1).innerText = v.pin_code;
+            row.insertCell(2).innerText = v.days_valid;
+            row.insertCell(3).innerText = '$' + v.price;
+            row.insertCell(4).innerText = v.seller_name;
+            const statusSpan = document.createElement('span');
+            statusSpan.className = 'role-badge';
+            statusSpan.style.background = v.is_used ? '#6b7280' : '#10b981';
+            statusSpan.innerText = v.is_used ? 'Used' : 'Unused';
+            row.insertCell(5).appendChild(statusSpan);
+        });
+    }
+
+    function toggleSelectAll() {
+        const all = document.getElementById('selectAllVouchers').checked;
+        document.querySelectorAll('.vouch-check').forEach(cb => cb.checked = all);
+    }
+
+    async function deleteSelectedVouchers(type) {
+        const checkboxes = document.querySelectorAll('.vouch-check:checked');
+        const ids = Array.from(checkboxes).map(cb => cb.value);
+        if (ids.length === 0) return alert('Select vouchers');
+        const code = prompt("Enter confirmation code (1234):");
+        if (code !== '1234') return alert('Invalid code');
+        const endpoint = type === 'used' ? '/admin/delete-used-vouchers' : '/admin/delete-vouchers';
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_id: adminId, voucher_ids: ids, confirmation_code: code })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if (res.ok) loadVouchers();
+    }
+
+    // ========== VOUCHER REQUESTS ==========
+    async function loadVoucherRequests() {
+        const res = await fetch(`/admin/voucher-requests?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('vreqTableBody');
+        tbody.innerHTML = '';
+        data.forEach(r => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = r.seller_name;
+            row.insertCell(1).innerText = r.quantity;
+            row.insertCell(2).innerText = r.days_valid;
+            row.insertCell(3).innerText = r.status;
+            if (r.status === 'pending') {
+                const btn = document.createElement('button');
+                btn.innerText = 'Approve & Generate';
+                btn.onclick = () => approveRequest(r.id);
+                row.insertCell(4).appendChild(btn);
+            } else {
+                row.insertCell(4).innerText = '-';
+            }
+        });
+    }
+
+    async function approveRequest(requestId) {
+        const price = prompt("Enter price per voucher:");
+        if (price) {
+            await fetch('/admin/approve-voucher-request', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ request_id: requestId, admin_id: adminId, price })
+            });
+            loadVoucherRequests();
+        }
+    }
+
+    // ========== SELLERS ==========
+    async function loadSubAdminsList() {
+        if (adminRole !== 'admin') return;
+        const res = await fetch(`/admin/subadmins?admin_id=${adminId}`);
+        subAdminsList = await res.json();
+    }
+
+    async function loadSellers() {
+        const res = await fetch(`/admin/sellers?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('sellerTableBody');
+        tbody.innerHTML = '';
+        for (const s of data) {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = s.name;
+            row.insertCell(1).innerText = s.username;
+            row.insertCell(2).innerText = s.phone;
+            row.insertCell(3).innerText = `${s.commission_rate} (${s.commission_type})`;
+            let subAdminCell = row.insertCell(4);
+            if (adminRole === 'admin') {
+                const select = document.createElement('select');
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.text = 'None';
+                select.appendChild(defaultOpt);
+                for (const sub of subAdminsList) {
+                    const opt = document.createElement('option');
+                    opt.value = sub.id;
+                    opt.text = sub.username;
+                    if (s.sub_admin_id == sub.id) opt.selected = true;
+                    select.appendChild(opt);
+                }
+                const assignBtn = document.createElement('button');
+                assignBtn.innerText = 'Assign';
+                assignBtn.onclick = () => assignSellerToSubAdmin(s.id, select.value);
+                subAdminCell.appendChild(select);
+                subAdminCell.appendChild(assignBtn);
+            } else {
+                subAdminCell.innerText = s.sub_admin_name || '-';
+            }
+            const delBtn = document.createElement('button');
+            delBtn.innerText = 'Delete';
+            delBtn.classList.add('danger');
+            delBtn.onclick = () => deleteSeller(s.id);
+            row.insertCell(5).appendChild(delBtn);
+        }
+    }
+
+    async function assignSellerToSubAdmin(sellerId, subAdminId) {
+        const res = await fetch('/admin/assign-seller-to-subadmin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_id: adminId, seller_id: sellerId, sub_admin_id: subAdminId || null })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+        if (res.ok) loadSellers();
+    }
+
+    async function deleteSeller(sellerId) {
+        if (confirm("Soft delete seller?")) {
+            await fetch('/admin/delete-seller', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId, seller_id: sellerId })
+            });
+            loadSellers();
+        }
+    }
+
+    // ========== SUB ADMINS ==========
+    async function loadSubAdmins() {
+        if (adminRole !== 'admin') {
+            document.getElementById('subadminTableBody').innerHTML = '<tr><td colspan="4">Only top admin can view sub admins</td></tr>';
+            return;
+        }
+        const res = await fetch(`/admin/subadmins?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('subadminTableBody');
+        tbody.innerHTML = '';
+        data.forEach(s => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = s.username;
+            row.insertCell(1).innerText = s.phone || '-';
+            row.insertCell(2).innerText = s.commission_rate + '%';
+            const btn = document.createElement('button');
+            btn.innerText = 'Delete';
+            btn.classList.add('danger');
+            btn.onclick = () => deleteSubAdmin(s.id);
+            row.insertCell(3).appendChild(btn);
+        });
+    }
+
+    async function deleteSubAdmin(subId) {
+        if (confirm("Delete sub admin?")) {
+            await fetch('/admin/delete-subadmin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId, subadmin_id: subId })
+            });
+            loadSubAdmins();
+            loadSubAdminsList();
+            loadSellers();
+        }
+    }
+
+    // ========== SERVERS ==========
+    async function loadServers() {
+        const res = await fetch(`/admin/servers?admin_id=${adminId}`);
+        const data = await res.json();
+        const tbody = document.getElementById('serverTableBody');
+        tbody.innerHTML = '';
+        data.forEach(s => {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerText = s.name;
+            row.insertCell(1).innerText = s.ip_address;
+            row.insertCell(2).innerText = s.port;
+            row.insertCell(3).innerText = s.status;
+            const actionsCell = row.insertCell(4);
+            const testBtn = document.createElement('button');
+            testBtn.innerText = 'Test';
+            testBtn.onclick = () => testServer(s.id);
+            const editBtn = document.createElement('button');
+            editBtn.innerText = 'Edit';
+            editBtn.onclick = () => editServer(s);
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerText = 'Delete';
+            deleteBtn.classList.add('danger');
+            deleteBtn.onclick = () => deleteServer(s.id);
+            const scriptBtn = document.createElement('button');
+            scriptBtn.innerText = 'Script';
+            scriptBtn.onclick = () => downloadScript(s.id);
+            actionsCell.appendChild(testBtn);
+            actionsCell.appendChild(editBtn);
+            actionsCell.appendChild(deleteBtn);
+            actionsCell.appendChild(scriptBtn);
+        });
+    }
+
+    async function addServer() {
+        const data = {
+            admin_id: adminId,
+            name: document.getElementById('serverName').value,
+            ip_address: document.getElementById('serverIP').value,
+            port: document.getElementById('serverPort').value,
+            username: document.getElementById('serverUsername').value,
+            password: document.getElementById('serverPassword').value,
+            secret: document.getElementById('serverSecret').value,
+            status: document.getElementById('serverStatus').value
+        };
+        const res = await fetch('/admin/servers', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        alert(result.message || result.error);
+        if (res.ok) {
+            document.getElementById('addServerForm').reset();
+            loadServers();
+        }
+    }
+
+    function editServer(server) {
+        document.getElementById('serverName').value = server.name;
+        document.getElementById('serverIP').value = server.ip_address;
+        document.getElementById('serverPort').value = server.port;
+        document.getElementById('serverUsername').value = server.username || '';
+        document.getElementById('serverPassword').value = server.password || '';
+        document.getElementById('serverSecret').value = server.secret || '';
+        document.getElementById('serverStatus').value = server.status;
+        const updateBtn = document.createElement('button');
+        updateBtn.innerText = 'Update Server';
+        updateBtn.onclick = () => updateServer(server.id);
+        const form = document.getElementById('addServerForm');
+        form.appendChild(updateBtn);
+    }
+
+    async function updateServer(serverId) {
+        const data = {
+            admin_id: adminId,
+            name: document.getElementById('serverName').value,
+            ip_address: document.getElementById('serverIP').value,
+            port: document.getElementById('serverPort').value,
+            username: document.getElementById('serverUsername').value,
+            password: document.getElementById('serverPassword').value,
+            secret: document.getElementById('serverSecret').value,
+            status: document.getElementById('serverStatus').value
+        };
+        const res = await fetch(`/admin/servers/${serverId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const result = await res.json();
+        alert(result.message || result.error);
+        if (res.ok) {
+            loadServers();
+            const btn = document.querySelector('#addServerForm button:last-child');
+            if (btn && btn.innerText === 'Update Server') btn.remove();
+        }
+    }
+
+    async function deleteServer(serverId) {
+        if (confirm('Delete this server?')) {
+            const res = await fetch(`/admin/servers/${serverId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId })
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (res.ok) loadServers();
+        }
+    }
+
+    async function testServer(serverId) {
+        const res = await fetch(`/admin/servers/${serverId}/test`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_id: adminId })
+        });
+        const data = await res.json();
+        alert(data.message || data.error);
+    }
+
+    function downloadScript(serverId) {
+        window.location.href = `/admin/servers/${serverId}/script?admin_id=${adminId}`;
+    }
+
+    // ========== MONTHLY ==========
+    async function loadMonthly() {
+        const year = document.getElementById('monthYear').value;
+        const month = document.getElementById('monthMonth').value;
+        const res = await fetch(`/admin/monthly-closing?admin_id=${adminId}&year=${year}&month=${month}`);
+        if (res.ok) {
+            const data = await res.json();
+            document.getElementById('mSales').innerText = '$' + data.total_sales;
+            document.getElementById('mCol').innerText = '$' + data.collected;
+            document.getElementById('mPend').innerText = '$' + data.pending;
+        }
+    }
+
+    async function recordCollection() {
+        const year = document.getElementById('monthYear').value;
+        const month = document.getElementById('monthMonth').value;
+        const amount = document.getElementById('colAmount').value;
+        if (amount) {
+            await fetch('/admin/record-collection', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ admin_id: adminId, year, month, amount })
+            });
+            loadMonthly();
+        }
+    }
+
+    // ========== CREATE ENTITIES ==========
+    async function createEntity(type) {
+        if (type === 'customer') {
+            await fetch('/admin/create-customer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    admin_id: adminId,
+                    phone: document.getElementById('custPhone').value,
+                    name: document.getElementById('custName').value,
+                    address: document.getElementById('custAddress').value
+                })
+            });
+            alert('Customer created');
+            document.getElementById('custPhone').value = '';
+            document.getElementById('custName').value = '';
+            document.getElementById('custAddress').value = '';
+            loadCustomers();
+        } else if (type === 'seller') {
+            await fetch('/admin/create-seller', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    admin_id: adminId,
+                    name: document.getElementById('selName').value,
+                    phone: document.getElementById('selPhone').value,
+                    username: document.getElementById('selUser').value,
+                    password: document.getElementById('selPass').value,
+                    commission_rate: document.getElementById('selCommVal').value,
+                    commission_type: document.getElementById('selCommType').value
+                })
+            });
+            alert('Seller created');
+            document.getElementById('selName').value = '';
+            document.getElementById('selPhone').value = '';
+            document.getElementById('selUser').value = '';
+            document.getElementById('selPass').value = '';
+            document.getElementById('selCommVal').value = '';
+            loadSellers();
+            populateSellerSelect();
+            loadSubAdminsList();
+        } else if (type === 'voucher') {
+            const sellerId = document.getElementById('createVoucherSeller').value;
+            const days = document.getElementById('vouchDays').value;
+            const price = document.getElementById('vouchPrice').value;
+            const qty = document.getElementById('vouchQty').value;
+            if (!sellerId || !days || !price || !qty) {
+                alert('All fields required');
+                return;
+            }
+            await fetch('/admin/create-vouchers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    admin_id: adminId,
+                    seller_id: sellerId,
+                    days_valid: days,
+                    price: price,
+                    quantity: qty
+                })
+            });
+            alert(`${qty} vouchers created`);
+            document.getElementById('vouchDays').value = '';
+            document.getElementById('vouchPrice').value = '';
+            document.getElementById('vouchQty').value = '';
+            loadVouchers();
+        } else if (type === 'subadmin') {
+            await fetch('/admin/create-subadmin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    admin_id: adminId,
+                    username: document.getElementById('subUser').value,
+                    password: document.getElementById('subPass').value,
+                    phone: document.getElementById('subPhone').value,
+                    email: document.getElementById('subEmail').value,
+                    commission_rate: document.getElementById('subCommValue').value
+                })
+            });
+            alert('Sub admin created');
+            document.getElementById('subUser').value = '';
+            document.getElementById('subPass').value = '';
+            document.getElementById('subPhone').value = '';
+            document.getElementById('subEmail').value = '';
+            document.getElementById('subCommValue').value = '';
+            loadSubAdmins();
+            loadSubAdminsList();
+            loadSellers();
+        }
+    }
+
+    async function populateSellerSelect() {
+        const res = await fetch(`/admin/sellers?admin_id=${adminId}`);
+        const sellers = await res.json();
+        const select = document.getElementById('createVoucherSeller');
+        select.innerHTML = '';
+        sellers.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.text = s.name;
+            select.appendChild(opt);
+        });
+    }
+
+    // Month dropdown
+    const monthSelect = document.getElementById('monthMonth');
+    for (let i = 1; i <= 12; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.text = i;
+        monthSelect.appendChild(opt);
+    }
+
+    // Dark mode
+    const toggleBtn = document.getElementById('toggleMode');
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️ Light Mode' : '🌙 Dark Mode';
+    });
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+        toggleBtn.textContent = '☀️ Light Mode';
+    }
+
+    login();
+</script>
+</body>
+</html>

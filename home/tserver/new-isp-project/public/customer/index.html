@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>My ISP</title>
+    <link rel="manifest" href="/customer/manifest.json">
+    <meta name="theme-color" content="#3b82f6">
+    <link rel="apple-touch-icon" href="/customer/icon-192.png">
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 0; background: #f0f2f5; color: #333; }
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; }
+        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        input { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .stat { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .status-active { color: #10b981; }
+        .status-suspended { color: #ef4444; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="login-screen" class="container">
+        <div class="card" style="text-align: center;">
+            <h2>ISP Login</h2>
+            <input type="tel" id="phone" placeholder="Phone Number">
+            <input type="password" id="pin" placeholder="PIN Code">
+            <button onclick="login()">Log In</button>
+            <p id="login-error" style="color: red; display: none;"></p>
+        </div>
+    </div>
+    <div id="dashboard-screen" class="container hidden">
+        <h2>Hello, <span id="userName">User</span>!</h2>
+        <div class="card">
+            <div class="stat"><span>Status</span><span id="userStatus"></span></div>
+            <div class="stat"><span>Balance</span><span id="userBalance"></span></div>
+            <div class="stat"><span>Expiry</span><span id="userExpiry"></span></div>
+        </div>
+        <div class="card">
+            <input type="text" id="voucherPin" placeholder="Voucher Code">
+            <button onclick="recharge()">Recharge</button>
+        </div>
+        <button onclick="logout()" style="background: #ef4444;">Log Out</button>
+    </div>
+</div>
+<script>
+    let token = localStorage.getItem('customer_token');
+    async function login() {
+        const phone = document.getElementById('phone').value;
+        const pin = document.getElementById('pin').value;
+        const res = await fetch('/customer/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone, pin })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            token = data.token;
+            localStorage.setItem('customer_token', token);
+            showDashboard();
+        } else {
+            alert(data.error);
+        }
+    }
+    async function showDashboard() {
+        const res = await fetch('/customer/dashboard', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (res.ok) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.remove('hidden');
+            document.getElementById('userName').innerText = data.name;
+            document.getElementById('userStatus').innerText = data.status;
+            document.getElementById('userBalance').innerText = '$' + data.balance;
+            document.getElementById('userExpiry').innerText = new Date(data.expiry).toLocaleDateString();
+        }
+    }
+    function logout() { localStorage.removeItem('customer_token'); location.reload(); }
+    if (token) showDashboard();
+</script>
+</body>
+</html>

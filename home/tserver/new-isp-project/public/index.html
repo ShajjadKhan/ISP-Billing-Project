@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISP Billing Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg: #f0f2f5;
+            --sidebar-bg: #1e2a3a;
+            --sidebar-text: #cbd5e1;
+            --sidebar-hover: #2d3e4f;
+            --card-bg: #ffffff;
+            --text: #1e2a3a;
+            --border: #e2e8f0;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --input-bg: #ffffff;
+        }
+        body.dark {
+            --bg: #0f172a;
+            --sidebar-bg: #0f172a;
+            --sidebar-text: #94a3b8;
+            --sidebar-hover: #1e293b;
+            --card-bg: #1e293b;
+            --text: #e2e8f0;
+            --border: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #60a5fa;
+            --input-bg: #334155;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+        /* Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            transition: background 0.3s;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        .logo {
+            padding: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+        }
+        .nav {
+            flex: 1;
+        }
+        .nav-item {
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+        .nav-item:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+        /* Main content */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            padding: 1.5rem;
+        }
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        .search-bar input {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 2rem;
+            padding: 0.5rem 1rem;
+            width: 250px;
+            color: var(--text);
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .mode-toggle {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            cursor: pointer;
+        }
+        /* Stats cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+        .stat-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .stat-sub {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            color: #64748b;
+        }
+        /* Form cards grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .form-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+        input, button {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+        }
+        button {
+            background: var(--primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            margin-top: 0.5rem;
+        }
+        button:hover {
+            background: var(--primary-hover);
+        }
+        .output {
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background: var(--bg);
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            white-space: pre-wrap;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar .logo, .sidebar .nav-item span:not(.icon) {
+                display: none;
+            }
+            .main {
+                margin-left: 70px;
+            }
+        }
+        .icon {
+            width: 24px;
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="sidebar">
+        <div class="logo">ISP Billing</div>
+        <div class="nav">
+            <div class="nav-item active"><span class="icon">📊</span><span>Dashboard</span></div>
+            <div class="nav-item"><span class="icon">👥</span><span>Customers</span></div>
+            <div class="nav-item"><span class="icon">💳</span><span>Vouchers</span></div>
+            <div class="nav-item"><span class="icon">📱</span><span>Devices</span></div>
+            <div class="nav-item"><span class="icon">⚙️</span><span>Settings</span></div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="top-bar">
+            <div class="search-bar"><input type="text" placeholder="Search..."></div>
+            <div class="user-info">
+                <span>Admin</span>
+                <button class="mode-toggle" id="toggleMode">🌙 Dark</button>
+            </div>
+        </div>
+
+        <!-- Stats Cards (example numbers) -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Active Customers</div>
+                <div class="stat-value" id="activeCount">-</div>
+                <div class="stat-sub">Last 30 days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Unpaid Customers</div>
+                <div class="stat-value" id="unpaidCount">-</div>
+                <div class="stat-sub">Pending payment</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Total Devices</div>
+                <div class="stat-value" id="deviceCount">-</div>
+                <div class="stat-sub">Registered</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">SMS Balance</div>
+                <div class="stat-value">0</div>
+                <div class="stat-sub">Add balance</div>
+            </div>
+        </div>
+
+        <!-- Forms -->
+        <div class="form-grid">
+            <div class="form-card">
+                <h3>➕ New Customer</h3>
+                <form id="registerForm">
+                    <div class="form-group"><label>Name</label><input type="text" id="name" placeholder="Full name" required></div>
+                    <div class="form-group"><label>Phone</label><input type="text" id="phone" placeholder="0591234567" required></div>
+                    <div class="form-group"><label>Address</label><input type="text" id="address" placeholder="Room / Building"></div>
+                    <button type="submit">Register</button>
+                </form>
+                <div id="registerOutput" class="output"></div>
+            </div>
+
+            <div class="form-card">
+                <h3>📱 Add Device</h3>
+                <form id="deviceForm">
+                    <div class="form-group"><label>Phone Number</label><input type="text" id="devicePhone" placeholder="0591234567" required></div>
+                    <div class="form-group"><label>MAC Address</label><input type="text" id="mac" placeholder="AA:BB:CC:DD:EE:FF" required></div>
+                    <div class="form-group"><label>Device Name</label><input type="text" id="deviceName" placeholder="My Phone" required></div>
+                    <button type="submit">Add Device</button>
+                </form>
+                <div id="deviceOutput" class="output"></div>
+            </div>
+
+            <div class="form-card">
+                <h3>💳 Recharge with Voucher</h3>
+                <form id="rechargeForm">
+                    <div class="form-group"><label>Phone Number</label><input type="text" id="rechargePhone" placeholder="0591234567" required></div>
+                    <div class="form-group"><label>Voucher Code</label><input type="text" id="voucherCode" placeholder="100001" required></div>
+                    <button type="submit">Recharge</button>
+                </form>
+                <div id="rechargeOutput" class="output"></div>
+            </div>
+
+            <div class="form-card">
+                <h3>✅ Approve Device</h3>
+                <form id="approveForm">
+                    <div class="form-group"><label>Device ID</label><input type="number" id="deviceId" placeholder="3" required></div>
+                    <button type="submit">Approve</button>
+                </form>
+                <div id="approveOutput" class="output"></div>
+            </div>
+        </div>
+        <footer>© ISP Billing System | API: http://100.66.112.67:3000</footer>
+    </div>
+</div>
+
+<script>
+    const API_BASE = 'http://100.66.112.67:3000';
+
+    async function post(endpoint, data) {
+        const res = await fetch(`${API_BASE}${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        return await res.json();
+    }
+
+    // Register
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('address').value;
+        const output = document.getElementById('registerOutput');
+        try {
+            const result = await post('/register', { phone, name, address });
+            output.textContent = JSON.stringify(result, null, 2);
+            document.getElementById('registerForm').reset();
+            fetchStats();
+        } catch (err) {
+            output.textContent = 'Error: ' + err.message;
+        }
+    });
+
+    // Device add
+    document.getElementById('deviceForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('devicePhone').value;
+        const mac_address = document.getElementById('mac').value;
+        const device_name = document.getElementById('deviceName').value;
+        const output = document.getElementById('deviceOutput');
+        try {
+            const result = await post('/device/add', { phone, mac_address, device_name });
+            output.textContent = JSON.stringify(result, null, 2);
+            document.getElementById('deviceForm').reset();
+            fetchStats();
+        } catch (err) {
+            output.textContent = 'Error: ' + err.message;
+        }
+    });
+
+    // Recharge
+    document.getElementById('rechargeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const phone = document.getElementById('rechargePhone').value;
+        const pin_code = document.getElementById('voucherCode').value;
+        const output = document.getElementById('rechargeOutput');
+        try {
+            const result = await post('/recharge', { phone, pin_code });
+            output.textContent = JSON.stringify(result, null, 2);
+            document.getElementById('rechargeForm').reset();
+            fetchStats();
+        } catch (err) {
+            output.textContent = 'Error: ' + err.message;
+        }
+    });
+
+    // Approve device
+    document.getElementById('approveForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const device_id = document.getElementById('deviceId').value;
+        const output = document.getElementById('approveOutput');
+        try {
+            const result = await post('/admin/approve-device', { device_id });
+            output.textContent = JSON.stringify(result, null, 2);
+            document.getElementById('approveForm').reset();
+            fetchStats();
+        } catch (err) {
+            output.textContent = 'Error: ' + err.message;
+        }
+    });
+
+    // Fetch stats from backend (we'll create simple endpoints later)
+    async function fetchStats() {
+        try {
+            // Get total customers
+            const res = await fetch(`${API_BASE}/customers?admin_id=2`);
+            const customers = await res.json();
+            const active = customers.filter(c => c.status === 'active').length;
+            const unpaid = customers.filter(c => c.status === 'unpaid').length;
+            document.getElementById('activeCount').innerText = active;
+            document.getElementById('unpaidCount').innerText = unpaid;
+        } catch (e) {
+            console.warn("Stats not available yet");
+        }
+        try {
+            const deviceRes = await fetch(`${API_BASE}/devices`);
+            const devices = await deviceRes.json();
+            document.getElementById('deviceCount').innerText = devices.length;
+        } catch (e) {}
+    }
+
+    fetchStats();
+
+    // Dark mode toggle
+    const toggleBtn = document.getElementById('toggleMode');
+    toggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+    });
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+        toggleBtn.textContent = '☀️ Light';
+    }
+</script>
+</body>
+</html>
