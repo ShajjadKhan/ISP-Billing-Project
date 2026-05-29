@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>CyberNet WiFi</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);font-family:'IBM Plex Sans',sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:rgba(255,255,255,.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:36px 28px;width:100%;max-width:380px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.logo{width:72px;height:72px;background:linear-gradient(135deg,#0ea5e9,#0284c7);border-radius:20px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;font-size:32px}
+h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
+.sub{color:#94a3b8;font-size:13px;margin-bottom:24px;line-height:1.5}
+.form-label{display:block;color:#94a3b8;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;text-align:left}
+.form-input{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:13px 16px;color:#fff;font-size:16px;font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:14px}
+.form-input:focus{border-color:#0ea5e9}
+.form-input::placeholder{color:#475569}
+.btn{width:100%;padding:13px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.btn-outline{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-top:10px}
+.error-box{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;text-align:left}
+.wait-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:20px;margin-bottom:20px}
+.wait-box h3{color:#fbbf24;font-size:15px;font-weight:600;margin-bottom:6px}
+.wait-box p{color:#94a3b8;font-size:12px;line-height:1.6}
+.spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,.1);border-top-color:#0ea5e9;border-radius:50%;animation:spin 1s linear infinite;margin:16px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mac{font-size:11px;color:#334155;margin-top:18px;font-family:monospace}
+.terms{color:#475569;font-size:11px;margin-top:16px;line-height:1.5}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="card">
+ <div class="logo">&#x1F4F6;</div>
+
+ <!-- Step 1: Phone entry -->
+ <div id="step1">
+  <h1>CyberNet WiFi</h1>
+  <p class="sub">Enter your phone number to request internet access.</p>
+  <div id="err" class="error-box hidden"></div>
+  <label class="form-label">Phone Number</label>
+  <input type="tel" id="phone" class="form-input" placeholder="05xxxxxxxx" inputmode="numeric" autofocus>
+  <button class="btn" onclick="submitPhone()">Request Access</button>
+  <p class="terms">By connecting you agree to use this network lawfully and in accordance with Saudi regulations.</p>
+ </div>
+
+ <!-- Step 2: Waiting -->
+ <div id="step2" class="hidden">
+  <h1>Request Sent!</h1>
+  <p class="sub">Your request has been submitted.</p>
+  <div class="wait-box">
+   <h3>&#9203; Waiting for Approval</h3>
+   <p>An admin will approve your connection shortly. This page will redirect you automatically once approved.</p>
+  </div>
+  <div class="spinner"></div>
+  <p style="color:#64748b;font-size:12px" id="countdown">Checking in 10 seconds...</p>
+  <button class="btn btn-outline" onclick="tryLogin()">Check Now</button>
+ </div>
+
+ <div class="mac">Device: $(mac)</div>
+</div>
+
+<!-- Hidden Mikrotik login form -->
+<form id="mkForm" method="post" action="$(link-login)" class="hidden">
+ <input type="hidden" name="username" value="$(mac)">
+ <input type="hidden" name="password" value="">
+ <input type="hidden" name="dst" value="$(link-orig)">
+</form>
+
+<script>
+var MAC = '$(mac)';
+var IP  = '$(ip)';
+var PORTAL = 'http://10.20.30.40:8091';
+var timer, countdown, secs = 10;
+
+function submitPhone() {
+ var phone = document.getElementById('phone').value.replace(/\D/g,'');
+ if (phone.length < 9) {
+  var e = document.getElementById('err');
+  e.textContent = 'Please enter a valid phone number.';
+  e.classList.remove('hidden');
+  return;
+ }
+ var fd = new FormData();
+ fd.append('phone', phone);
+ fd.append('mac', MAC);
+ fd.append('ip', IP);
+ fetch(PORTAL + '/submit.php', {method:'POST', body:fd})
+ .then(function(r){ return r.json(); })
+ .then(function(d){
+  if (d.status === 'approved') {
+   document.getElementById('mkForm').submit();
+  } else {
+   document.getElementById('step1').classList.add('hidden');
+   document.getElementById('step2').classList.remove('hidden');
+   startCountdown();
+  }
+ })
+ .catch(function(){
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step2').classList.remove('hidden');
+  startCountdown();
+ });
+}
+
+function tryLogin() {
+ clearInterval(timer);
+ clearInterval(countdown);
+ document.getElementById('mkForm').submit();
+}
+
+function startCountdown() {
+ secs = 10;
+ countdown = setInterval(function(){
+  secs--;
+  document.getElementById('countdown').textContent = 'Checking in ' + secs + ' seconds...';
+  if (secs <= 0) {
+   clearInterval(countdown);
+   tryLogin();
+  }
+ }, 1000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+nohup: ignoring input
+[Fri May 29 01:31:11 2026] PHP 8.3.6 Development Server (http://0.0.0.0:8090) started
+[Fri May 29 01:35:03 2026] 10.12.14.1:58060 Accepted
+[Fri May 29 01:35:03 2026] 10.12.14.1:58060 [200]: GET /index.php
+[Fri May 29 01:35:03 2026] 10.12.14.1:58060 Closing
+[Fri May 29 01:35:05 2026] 10.12.14.1:33170 Accepted
+[Fri May 29 01:35:05 2026] 10.12.14.1:33170 [302]: POST /index.php
+[Fri May 29 01:35:05 2026] 10.12.14.1:33170 Closing
+[Fri May 29 01:35:05 2026] 10.12.14.1:33184 Accepted
+[Fri May 29 01:35:05 2026] 10.12.14.1:33184 [200]: GET /index.php
+[Fri May 29 01:35:05 2026] 10.12.14.1:33184 Closing
+[Fri May 29 01:35:08 2026] 10.12.14.1:33198 Accepted
+[Fri May 29 01:35:08 2026] 10.12.14.1:33198 [200]: GET /index.php?page=hotspot
+[Fri May 29 01:35:08 2026] 10.12.14.1:33198 Closing
+[Fri May 29 02:20:32 2026] 10.12.14.1:38252 Accepted
+[Fri May 29 02:20:32 2026] 10.12.14.1:38252 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:20:32 2026] 10.12.14.1:38252 Closing
+[Fri May 29 02:20:34 2026] 10.12.14.1:36000 Accepted
+[Fri May 29 02:20:34 2026] 10.12.14.1:36000 [302]: POST /index.php?page=hotspot
+[Fri May 29 02:20:34 2026] 10.12.14.1:36000 Closing
+[Fri May 29 02:20:34 2026] 10.12.14.1:36006 Accepted
+[Fri May 29 02:20:34 2026] 10.12.14.1:36006 [200]: GET /index.php
+[Fri May 29 02:20:34 2026] 10.12.14.1:36006 Closing
+[Fri May 29 02:20:36 2026] 10.12.14.1:36022 Accepted
+[Fri May 29 02:20:36 2026] 10.12.14.1:36022 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:20:36 2026] 10.12.14.1:36022 Closing
+[Fri May 29 02:57:53 2026] 10.12.14.1:34060 Accepted
+[Fri May 29 02:57:53 2026] 10.12.14.1:34060 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:57:53 2026] 10.12.14.1:34060 Closing
+[Fri May 29 02:57:55 2026] 10.12.14.1:34064 Accepted
+[Fri May 29 02:57:55 2026] 10.12.14.1:34064 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:57:55 2026] 10.12.14.1:34064 Closing
+[Fri May 29 02:57:56 2026] 10.12.14.1:34070 Accepted
+[Fri May 29 02:57:56 2026] 10.12.14.1:34070 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:57:56 2026] 10.12.14.1:34070 Closing
+[Fri May 29 02:57:57 2026] 10.12.14.1:34074 Accepted
+[Fri May 29 02:57:57 2026] 10.12.14.1:34074 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:57:57 2026] 10.12.14.1:34074 Closing
+[Fri May 29 02:58:29 2026] 10.12.14.1:55638 Accepted
+[Fri May 29 02:58:29 2026] 10.12.14.1:55638 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:29 2026] 10.12.14.1:55638 Closing
+[Fri May 29 02:58:29 2026] 10.12.14.1:55642 Accepted
+[Fri May 29 02:58:29 2026] 10.12.14.1:55642 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:29 2026] 10.12.14.1:55642 Closing
+[Fri May 29 02:58:29 2026] 10.12.14.1:55646 Accepted
+[Fri May 29 02:58:29 2026] 10.12.14.1:55646 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:29 2026] 10.12.14.1:55646 Closing
+[Fri May 29 02:58:29 2026] 10.12.14.1:55660 Accepted
+[Fri May 29 02:58:29 2026] 10.12.14.1:55660 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:29 2026] 10.12.14.1:55660 Closing
+[Fri May 29 02:58:30 2026] 10.12.14.1:55672 Accepted
+[Fri May 29 02:58:30 2026] 10.12.14.1:55672 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:30 2026] 10.12.14.1:55672 Closing
+[Fri May 29 02:58:30 2026] 10.12.14.1:55682 Accepted
+[Fri May 29 02:58:30 2026] 10.12.14.1:55682 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:30 2026] 10.12.14.1:55682 Closing
+[Fri May 29 02:58:30 2026] 10.12.14.1:55684 Accepted
+[Fri May 29 02:58:30 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 02:58:30 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 02:58:30 2026] 10.12.14.1:55684 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 02:58:30 2026] 10.12.14.1:55684 Closing
+[Fri May 29 02:58:31 2026] 10.12.14.1:55692 Accepted
+[Fri May 29 02:58:31 2026] 10.12.14.1:55692 [200]: GET /index.php?page=packages
+[Fri May 29 02:58:31 2026] 10.12.14.1:55692 Closing
+[Fri May 29 02:58:32 2026] 10.12.14.1:55694 Accepted
+[Fri May 29 02:58:32 2026] 10.12.14.1:55694 [200]: GET /index.php?page=devices
+[Fri May 29 02:58:32 2026] 10.12.14.1:55694 Closing
+[Fri May 29 02:58:32 2026] 10.12.14.1:55696 Accepted
+[Fri May 29 02:58:32 2026] 10.12.14.1:55696 [200]: GET /index.php?page=logs
+[Fri May 29 02:58:32 2026] 10.12.14.1:55696 Closing
+[Fri May 29 02:58:34 2026] 10.12.14.1:40644 Accepted
+[Fri May 29 02:58:34 2026] 10.12.14.1:40644 [200]: GET /index.php?page=reports
+[Fri May 29 02:58:34 2026] 10.12.14.1:40644 Closing
+[Fri May 29 02:58:34 2026] 10.12.14.1:40660 Accepted
+[Fri May 29 02:58:34 2026] 10.12.14.1:40660 [200]: GET /index.php?page=settings
+[Fri May 29 02:58:34 2026] 10.12.14.1:40660 Closing
+[Fri May 29 02:58:58 2026] 10.12.14.1:51490 Accepted
+[Fri May 29 02:58:58 2026] 10.12.14.1:51490 [200]: GET /index.php?page=hotspot
+[Fri May 29 02:58:58 2026] 10.12.14.1:51490 Closing
+[Fri May 29 03:02:34 2026] 10.12.14.1:48520 Accepted
+[Fri May 29 03:02:34 2026] 10.12.14.1:48520 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:02:34 2026] 10.12.14.1:48520 Closing
+[Fri May 29 03:03:18 2026] 10.12.14.1:34286 Accepted
+[Fri May 29 03:03:18 2026] 10.12.14.1:34286 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:18 2026] 10.12.14.1:34286 Closing
+[Fri May 29 03:03:18 2026] 10.12.14.1:34300 Accepted
+[Fri May 29 03:03:18 2026] 10.12.14.1:34300 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:18 2026] 10.12.14.1:34300 Closing
+[Fri May 29 03:03:18 2026] 10.12.14.1:34316 Accepted
+[Fri May 29 03:03:18 2026] 10.12.14.1:34316 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:18 2026] 10.12.14.1:34316 Closing
+[Fri May 29 03:03:19 2026] 10.12.14.1:34320 Accepted
+[Fri May 29 03:03:19 2026] 10.12.14.1:34320 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:19 2026] 10.12.14.1:34320 Closing
+[Fri May 29 03:03:19 2026] 10.12.14.1:34336 Accepted
+[Fri May 29 03:03:19 2026] 10.12.14.1:34336 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:19 2026] 10.12.14.1:34336 Closing
+[Fri May 29 03:03:19 2026] 10.12.14.1:34340 Accepted
+[Fri May 29 03:03:19 2026] 10.12.14.1:34340 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:19 2026] 10.12.14.1:34340 Closing
+[Fri May 29 03:03:19 2026] 10.12.14.1:34350 Accepted
+[Fri May 29 03:03:19 2026] 10.12.14.1:34350 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:19 2026] 10.12.14.1:34350 Closing
+[Fri May 29 03:03:19 2026] 10.12.14.1:34366 Accepted
+[Fri May 29 03:03:19 2026] 10.12.14.1:34366 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:03:19 2026] 10.12.14.1:34366 Closing
+[Fri May 29 03:09:44 2026] 10.12.14.1:39256 Accepted
+[Fri May 29 03:09:44 2026] 10.12.14.1:39256 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:09:44 2026] 10.12.14.1:39256 Closing
+[Fri May 29 03:10:09 2026] 10.12.14.1:54840 Accepted
+[Fri May 29 03:10:09 2026] 10.12.14.1:54840 [302]: POST /index.php?page=hotspot
+[Fri May 29 03:10:09 2026] 10.12.14.1:54840 Closing
+[Fri May 29 03:10:09 2026] 10.12.14.1:54856 Accepted
+[Fri May 29 03:10:09 2026] 10.12.14.1:54856 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:10:09 2026] 10.12.14.1:54856 Closing
+[Fri May 29 03:12:05 2026] 10.12.14.1:47612 Accepted
+[Fri May 29 03:12:05 2026] 10.12.14.1:47612 [200]: GET /index.php?page=dashboard
+[Fri May 29 03:12:05 2026] 10.12.14.1:47612 Closing
+[Fri May 29 03:28:04 2026] 10.12.14.1:35746 Accepted
+[Fri May 29 03:28:04 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:04 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:04 2026] 10.12.14.1:35746 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:04 2026] 10.12.14.1:35746 Closing
+[Fri May 29 03:28:11 2026] 10.12.14.1:35750 Accepted
+[Fri May 29 03:28:11 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:11 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35750 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35750 Closing
+[Fri May 29 03:28:11 2026] 10.12.14.1:35756 Accepted
+[Fri May 29 03:28:11 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:11 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35756 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35756 Closing
+[Fri May 29 03:28:11 2026] 10.12.14.1:35768 Accepted
+[Fri May 29 03:28:11 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:11 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35768 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35768 Closing
+[Fri May 29 03:28:11 2026] 10.12.14.1:35782 Accepted
+[Fri May 29 03:28:11 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:11 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35782 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:11 2026] 10.12.14.1:35782 Closing
+[Fri May 29 03:28:12 2026] 10.12.14.1:35798 Accepted
+[Fri May 29 03:28:12 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:12 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35798 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35798 Closing
+[Fri May 29 03:28:12 2026] 10.12.14.1:35810 Accepted
+[Fri May 29 03:28:12 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:12 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35810 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35810 Closing
+[Fri May 29 03:28:12 2026] 10.12.14.1:35826 Accepted
+[Fri May 29 03:28:12 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:12 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35826 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:12 2026] 10.12.14.1:35826 Closing
+[Fri May 29 03:28:21 2026] 10.12.14.1:55354 Accepted
+[Fri May 29 03:28:21 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:21 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:21 2026] 10.12.14.1:55354 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:21 2026] 10.12.14.1:55354 Closing
+[Fri May 29 03:28:28 2026] 10.12.14.1:59196 Accepted
+[Fri May 29 03:28:28 2026] 10.12.14.1:59196 [404]: GET /favicon.ico - No such file or directory
+[Fri May 29 03:28:28 2026] 10.12.14.1:59196 Closing
+[Fri May 29 03:28:30 2026] 10.12.14.1:59200 Accepted
+[Fri May 29 03:28:30 2026] 10.12.14.1:59200 [200]: GET /index.php?page=packages
+[Fri May 29 03:28:30 2026] 10.12.14.1:59200 Closing
+[Fri May 29 03:28:34 2026] 10.12.14.1:50906 Accepted
+[Fri May 29 03:28:34 2026] 10.12.14.1:50906 [200]: GET /index.php?page=devices
+[Fri May 29 03:28:34 2026] 10.12.14.1:50906 Closing
+[Fri May 29 03:28:37 2026] 10.12.14.1:50916 Accepted
+[Fri May 29 03:28:37 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:37 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:37 2026] 10.12.14.1:50916 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:37 2026] 10.12.14.1:50916 Closing
+[Fri May 29 03:28:39 2026] 10.12.14.1:50928 Accepted
+[Fri May 29 03:28:39 2026] 10.12.14.1:50928 [200]: GET /index.php?page=dashboard
+[Fri May 29 03:28:39 2026] 10.12.14.1:50928 Closing
+[Fri May 29 03:28:41 2026] 10.12.14.1:50934 Accepted
+[Fri May 29 03:28:41 2026] 10.12.14.1:50934 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:28:41 2026] 10.12.14.1:50934 Closing
+[Fri May 29 03:28:43 2026] 10.12.14.1:50938 Accepted
+[Fri May 29 03:28:43 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:28:43 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:43 2026] 10.12.14.1:50938 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:28:43 2026] 10.12.14.1:50938 Closing
+[Fri May 29 03:28:44 2026] 10.12.14.1:40398 Accepted
+[Fri May 29 03:28:44 2026] 10.12.14.1:40398 [200]: GET /index.php?page=packages
+[Fri May 29 03:28:44 2026] 10.12.14.1:40398 Closing
+[Fri May 29 03:28:47 2026] 10.12.14.1:40406 Accepted
+[Fri May 29 03:28:47 2026] 10.12.14.1:40406 [200]: GET /index.php?page=devices
+[Fri May 29 03:28:47 2026] 10.12.14.1:40406 Closing
+[Fri May 29 03:28:51 2026] 10.12.14.1:40410 Accepted
+[Fri May 29 03:28:51 2026] 10.12.14.1:40410 [200]: GET /index.php?page=logs
+[Fri May 29 03:28:51 2026] 10.12.14.1:40410 Closing
+[Fri May 29 03:28:53 2026] 10.12.14.1:40426 Accepted
+[Fri May 29 03:28:53 2026] 10.12.14.1:40426 [200]: GET /index.php?page=reports
+[Fri May 29 03:28:53 2026] 10.12.14.1:40426 Closing
+[Fri May 29 03:28:55 2026] 10.12.14.1:43360 Accepted
+[Fri May 29 03:28:55 2026] 10.12.14.1:43360 [200]: GET /index.php?page=settings
+[Fri May 29 03:28:55 2026] 10.12.14.1:43360 Closing
+[Fri May 29 03:31:28 2026] 10.12.14.1:47602 Accepted
+[Fri May 29 03:31:28 2026] 10.12.14.1:47602 [200]: GET /index.php?page=settings
+[Fri May 29 03:31:28 2026] 10.12.14.1:47602 Closing
+[Fri May 29 03:31:29 2026] 10.12.14.1:47608 Accepted
+[Fri May 29 03:31:29 2026] 10.12.14.1:47608 [200]: GET /index.php?page=dashboard
+[Fri May 29 03:31:29 2026] 10.12.14.1:47608 Closing
+[Fri May 29 03:31:30 2026] 10.12.14.1:47610 Accepted
+[Fri May 29 03:31:30 2026] 10.12.14.1:47610 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:31:30 2026] 10.12.14.1:47610 Closing
+[Fri May 29 03:31:31 2026] 10.12.14.1:47618 Accepted
+[Fri May 29 03:31:31 2026] 10.12.14.1:47618 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:31:31 2026] 10.12.14.1:47618 Closing
+[Fri May 29 03:31:31 2026] 10.12.14.1:47630 Accepted
+[Fri May 29 03:31:31 2026] 10.12.14.1:47630 [200]: GET /index.php?page=hotspot
+[Fri May 29 03:31:31 2026] 10.12.14.1:47630 Closing
+[Fri May 29 03:31:32 2026] 10.12.14.1:47644 Accepted
+[Fri May 29 03:31:32 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:31:32 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:32 2026] 10.12.14.1:47644 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:32 2026] 10.12.14.1:47644 Closing
+[Fri May 29 03:31:32 2026] 10.12.14.1:47652 Accepted
+[Fri May 29 03:31:32 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:31:32 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:32 2026] 10.12.14.1:47652 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:32 2026] 10.12.14.1:47652 Closing
+[Fri May 29 03:31:33 2026] 10.12.14.1:47656 Accepted
+[Fri May 29 03:31:33 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 03:31:33 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:33 2026] 10.12.14.1:47656 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 03:31:33 2026] 10.12.14.1:47656 Closing
+[Fri May 29 03:31:33 2026] 10.12.14.1:47658 Accepted
+[Fri May 29 03:31:33 2026] 10.12.14.1:47658 [200]: GET /index.php?page=packages
+[Fri May 29 03:31:33 2026] 10.12.14.1:47658 Closing
+[Fri May 29 03:31:33 2026] 10.12.14.1:58436 Accepted
+[Fri May 29 03:31:33 2026] 10.12.14.1:58436 [200]: GET /index.php?page=packages
+[Fri May 29 03:31:33 2026] 10.12.14.1:58436 Closing
+[Fri May 29 03:31:34 2026] 10.12.14.1:58452 Accepted
+[Fri May 29 03:31:34 2026] 10.12.14.1:58452 [200]: GET /index.php?page=packages
+[Fri May 29 03:31:34 2026] 10.12.14.1:58452 Closing
+[Fri May 29 03:31:34 2026] 10.12.14.1:58460 Accepted
+[Fri May 29 03:31:34 2026] 10.12.14.1:58460 [200]: GET /index.php?page=devices
+[Fri May 29 03:31:34 2026] 10.12.14.1:58460 Closing
+[Fri May 29 03:31:35 2026] 10.12.14.1:58470 Accepted
+[Fri May 29 03:31:35 2026] 10.12.14.1:58470 [200]: GET /index.php?page=logs
+[Fri May 29 03:31:35 2026] 10.12.14.1:58470 Closing
+[Fri May 29 04:08:15 2026] 10.12.14.1:59798 Accepted
+[Fri May 29 04:08:15 2026] 10.12.14.1:59798 [200]: GET /index.php?page=logs
+[Fri May 29 04:08:15 2026] 10.12.14.1:59798 Closing
+[Fri May 29 04:08:21 2026] 10.12.14.1:59806 Accepted
+[Fri May 29 04:08:21 2026] 10.12.14.1:59806 [200]: GET /index.php?page=dashboard
+[Fri May 29 04:08:21 2026] 10.12.14.1:59806 Closing
+[Fri May 29 04:09:11 2026] 10.12.14.1:33872 Accepted
+[Fri May 29 04:09:11 2026] 10.12.14.1:33872 [200]: GET /index.php?page=hotspot
+[Fri May 29 04:09:11 2026] 10.12.14.1:33872 Closing
+[Fri May 29 04:09:41 2026] 10.12.14.1:59618 Accepted
+[Fri May 29 04:09:42 2026] 10.12.14.1:59618 [302]: POST /index.php?page=hotspot
+[Fri May 29 04:09:42 2026] 10.12.14.1:59618 Closing
+[Fri May 29 04:09:42 2026] 10.12.14.1:59628 Accepted
+[Fri May 29 04:09:42 2026] 10.12.14.1:59628 [200]: GET /index.php?page=hotspot
+[Fri May 29 04:09:42 2026] 10.12.14.1:59628 Closing
+[Fri May 29 04:10:29 2026] 10.12.14.1:56968 Accepted
+[Fri May 29 04:10:29 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 04:10:29 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 04:10:29 2026] 10.12.14.1:56968 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 04:10:29 2026] 10.12.14.1:56968 Closing
+[Fri May 29 04:10:35 2026] 10.12.14.1:41902 Accepted
+[Fri May 29 04:10:35 2026] 10.12.14.1:41902 [200]: GET /index.php?page=packages
+[Fri May 29 04:10:35 2026] 10.12.14.1:41902 Closing
+[Fri May 29 04:10:36 2026] 10.12.14.1:41912 Accepted
+[Fri May 29 04:10:36 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 04:10:36 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 04:10:36 2026] 10.12.14.1:41912 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 04:10:36 2026] 10.12.14.1:41912 Closing
+[Fri May 29 04:10:45 2026] 10.12.14.1:59272 Accepted
+[Fri May 29 04:10:45 2026] 10.12.14.1:59272 [200]: GET /index.php?page=packages
+[Fri May 29 04:10:45 2026] 10.12.14.1:59272 Closing
+[Fri May 29 04:10:49 2026] 10.12.14.1:59286 Accepted
+[Fri May 29 04:10:49 2026] 10.12.14.1:59286 [200]: GET /index.php?page=devices
+[Fri May 29 04:10:49 2026] 10.12.14.1:59286 Closing
+[Fri May 29 04:11:05 2026] 10.12.14.1:49342 Accepted
+[Fri May 29 04:11:05 2026] 10.12.14.1:49342 [200]: GET /index.php?page=logs
+[Fri May 29 04:11:05 2026] 10.12.14.1:49342 Closing
+[Fri May 29 04:11:07 2026] 10.12.14.1:49358 Accepted
+[Fri May 29 04:11:07 2026] 10.12.14.1:49358 [200]: GET /index.php?page=reports
+[Fri May 29 04:11:07 2026] 10.12.14.1:49358 Closing
+[Fri May 29 04:11:09 2026] 10.12.14.1:49366 Accepted
+[Fri May 29 04:11:09 2026] 10.12.14.1:49366 [200]: GET /index.php?page=reports&type=active
+[Fri May 29 04:11:09 2026] 10.12.14.1:49366 Closing
+[Fri May 29 04:11:29 2026] 10.12.14.1:55770 Accepted
+[Fri May 29 04:11:29 2026] 10.12.14.1:55770 [200]: GET /index.php?page=reports&type=expiring
+[Fri May 29 04:11:29 2026] 10.12.14.1:55770 Closing
+[Fri May 29 04:11:31 2026] 10.12.14.1:55780 Accepted
+[Fri May 29 04:11:31 2026] 10.12.14.1:55780 [200]: GET /index.php?page=reports&type=devices
+[Fri May 29 04:11:31 2026] 10.12.14.1:55780 Closing
+[Fri May 29 04:11:35 2026] 10.12.14.1:35756 Accepted
+[Fri May 29 04:11:35 2026] 10.12.14.1:35756 [200]: GET /index.php?page=reports&type=legal
+[Fri May 29 04:11:35 2026] 10.12.14.1:35756 Closing
+[Fri May 29 04:11:42 2026] 10.12.14.1:35772 Accepted
+[Fri May 29 04:11:42 2026] 10.12.14.1:35772 [200]: GET /index.php?page=settings
+[Fri May 29 04:11:42 2026] 10.12.14.1:35772 Closing
+[Fri May 29 18:50:17 2026] 10.12.14.1:52694 Accepted
+[Fri May 29 18:50:17 2026] 10.12.14.1:52694 [200]: GET /index.php?page=customers
+[Fri May 29 18:50:17 2026] 10.12.14.1:52694 Closing
+[Fri May 29 18:50:18 2026] 10.12.14.1:52706 Accepted
+[Fri May 29 18:50:19 2026] 10.12.14.1:52706 [302]: POST /index.php?page=customers
+[Fri May 29 18:50:19 2026] 10.12.14.1:52706 Closing
+[Fri May 29 18:50:19 2026] 10.12.14.1:52718 Accepted
+[Fri May 29 18:50:19 2026] 10.12.14.1:52718 [200]: GET /index.php
+[Fri May 29 18:50:19 2026] 10.12.14.1:52718 Closing
+[Fri May 29 18:56:21 2026] 10.12.14.1:36988 Accepted
+[Fri May 29 18:56:21 2026] 10.12.14.1:36988 [200]: GET /index.php?page=hotspot
+[Fri May 29 18:56:21 2026] 10.12.14.1:36988 Closing
+[Fri May 29 19:19:07 2026] 10.12.14.1:49228 Accepted
+[Fri May 29 19:19:07 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 19:19:07 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 19:19:07 2026] 10.12.14.1:49228 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 19:19:07 2026] 10.12.14.1:49228 Closing
+[Fri May 29 19:19:10 2026] 10.12.14.1:49232 Accepted
+[Fri May 29 19:19:10 2026] 10.12.14.1:49232 [200]: GET /index.php?page=hotspot
+[Fri May 29 19:19:10 2026] 10.12.14.1:49232 Closing
+[Fri May 29 19:19:11 2026] 10.12.14.1:49234 Accepted
+[Fri May 29 19:19:11 2026] 10.12.14.1:49234 [200]: GET /index.php?page=dashboard
+[Fri May 29 19:19:11 2026] 10.12.14.1:49234 Closing
+[Fri May 29 19:33:33 2026] 10.12.14.1:47106 Accepted
+[Fri May 29 19:33:33 2026] 10.12.14.1:47106 [200]: GET /index.php?page=hotspot
+[Fri May 29 19:33:33 2026] 10.12.14.1:47106 Closing
+[Fri May 29 19:33:41 2026] 10.12.14.1:47118 Accepted
+[Fri May 29 19:33:41 2026] PHP Warning:  SQLite3::query(): Unable to prepare statement: no such table: c in /home/tserver/cybernet/index.php on line 561
+[Fri May 29 19:33:41 2026] PHP Fatal error:  Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 19:33:41 2026] 10.12.14.1:47118 [200]: GET /index.php?page=customers - Uncaught Error: Call to a member function fetchArray() on false in /home/tserver/cybernet/index.php:562
+Stack trace:
+#0 {main}
+  thrown in /home/tserver/cybernet/index.php on line 562
+[Fri May 29 19:33:41 2026] 10.12.14.1:47118 Closing
