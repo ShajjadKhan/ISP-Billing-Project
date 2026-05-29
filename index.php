@@ -98,6 +98,8 @@ if (isLoggedIn() && isAdmin() && $action === 'save_customer') {
 if (isLoggedIn() && isMaster() && isset($_GET['delete_customer'])) {
     $id = intval($_GET['delete_customer']);
     $c  = $db->querySingle("SELECT name FROM customers WHERE id=$id",true);
+    $devs=$db->query("SELECT mac_address FROM devices WHERE customer_id=$id AND status='active'");
+    while($dv=$devs->fetchArray(SQLITE3_ASSOC)) radius_remove_user($dv['mac_address']);
     $db->exec("DELETE FROM customers WHERE id=$id");
     $db->exec("DELETE FROM devices WHERE customer_id=$id");
     $db->exec("DELETE FROM packages WHERE customer_id=$id");
@@ -558,7 +560,7 @@ tbody td{padding:10px 12px;vertical-align:middle}
  </div>
  <div class="table-wrap"><table><thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Building/Room</th><th>Devices</th><th>Package</th><th>Status</th><th>Actions</th></tr></thead>
  <tbody id="custTbody">
- <?php $custs=$db->query("SELECT c.*,(SELECT COUNT(*) FROM devices WHERE customer_id=c.id AND status='active') as dev_count FROM customers WHERE status!='deleted' ORDER BY name");
+ <?php $custs=$db->query("SELECT c.*,(SELECT COUNT(*) FROM devices WHERE customer_id=c.id AND status='active') as dev_count FROM customers c WHERE c.status!='deleted' ORDER BY c.name");
  $i=0; while($c=$custs->fetchArray(SQLITE3_ASSOC)):$i++;
  $dl=getDaysLeft($db,$c['id']);
  $cs=getCustomerStatus($db,$c['id']);

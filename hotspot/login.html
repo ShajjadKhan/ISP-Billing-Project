@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<?php if($step==='waiting'): ?><meta http-equiv="refresh" content="10"><?php endif; ?>
 <title>CyberNet WiFi</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -17,8 +18,14 @@ h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
 .form-input:focus{border-color:#0ea5e9}
 .form-input::placeholder{color:#475569}
 .btn{width:100%;padding:13px;background:linear-gradient(135deg,#0ea5e9,#0284c7);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s}
+.btn:hover{filter:brightness(1.1)}
 .btn-outline{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);margin-top:10px}
 .error-box{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:14px;text-align:left}
+.warn-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.4);border-radius:16px;padding:20px;margin-bottom:20px;text-align:left}
+.warn-box h3{color:#fbbf24;font-size:15px;font-weight:700;margin-bottom:10px;text-align:center}
+.warn-box p{color:#94a3b8;font-size:12px;line-height:1.7;margin-bottom:8px}
+.warn-box .step{background:rgba(255,255,255,.05);border-radius:8px;padding:8px 12px;margin-bottom:6px;font-size:12px;color:#cbd5e1}
+.warn-box .step strong{color:#fbbf24}
 .wait-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:16px;padding:20px;margin-bottom:20px}
 .wait-box h3{color:#fbbf24;font-size:15px;font-weight:600;margin-bottom:6px}
 .wait-box p{color:#94a3b8;font-size:12px;line-height:1.6}
@@ -27,11 +34,43 @@ h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
 .mac{font-size:11px;color:#334155;margin-top:18px;font-family:monospace}
 .terms{color:#475569;font-size:11px;margin-top:16px;line-height:1.5}
 .hidden{display:none}
+.os-tabs{display:flex;gap:8px;margin-bottom:12px}
+.os-tab{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit}
+.os-tab.active{background:rgba(245,158,11,.2);border-color:rgba(245,158,11,.4);color:#fbbf24}
 </style>
 </head>
 <body>
 <div class="card">
  <div class="logo">&#x1F4F6;</div>
+
+ <!-- Step 0: Random MAC warning -->
+ <div id="step0" class="hidden">
+  <h1>Action Required</h1>
+  <p class="sub">Your device is using a <strong style="color:#fbbf24">random/private WiFi address</strong>. Please disable it to connect.</p>
+  <div class="warn-box">
+   <h3>&#9888; Disable Private WiFi Address</h3>
+   <div class="os-tabs">
+    <button class="os-tab active" onclick="showOS('android')">Android</button>
+    <button class="os-tab" onclick="showOS('iphone')">iPhone</button>
+   </div>
+   <div id="inst-android">
+    <div class="step"><strong>1.</strong> Open Settings → WiFi</div>
+    <div class="step"><strong>2.</strong> Tap and hold <strong>CyberNet-Test</strong></div>
+    <div class="step"><strong>3.</strong> Tap <strong>Modify network</strong> or gear icon</div>
+    <div class="step"><strong>4.</strong> Find <strong>Privacy</strong> or <strong>MAC address type</strong></div>
+    <div class="step"><strong>5.</strong> Select <strong>Use device MAC</strong></div>
+    <div class="step"><strong>6.</strong> Reconnect to WiFi</div>
+   </div>
+   <div id="inst-iphone" class="hidden">
+    <div class="step"><strong>1.</strong> Open Settings → WiFi</div>
+    <div class="step"><strong>2.</strong> Tap the <strong>(i)</strong> next to <strong>CyberNet-Test</strong></div>
+    <div class="step"><strong>3.</strong> Find <strong>Private WiFi Address</strong></div>
+    <div class="step"><strong>4.</strong> Turn it <strong>OFF</strong></div>
+    <div class="step"><strong>5.</strong> Reconnect to WiFi</div>
+   </div>
+  </div>
+  <p style="color:#64748b;font-size:12px;text-align:center">After reconnecting this message will disappear automatically.</p>
+ </div>
 
  <!-- Step 1: Phone entry -->
  <div id="step1">
@@ -71,7 +110,27 @@ h1{color:#fff;font-size:22px;font-weight:700;margin-bottom:6px}
 var MAC = '$(mac)';
 var IP  = '$(ip)';
 var PORTAL = 'http://10.20.30.40:8091';
-var timer, countdown, secs = 10;
+var countdown;
+
+function isRandomMAC(mac) {
+ if (!mac || mac.indexOf(':') === -1) return false;
+ var firstByte = parseInt(mac.split(':')[0], 16);
+ return (firstByte & 2) !== 0;
+}
+
+function showOS(os) {
+ document.getElementById('inst-android').classList.toggle('hidden', os !== 'android');
+ document.getElementById('inst-iphone').classList.toggle('hidden', os !== 'iphone');
+ document.querySelectorAll('.os-tab').forEach(function(t){ t.classList.remove('active'); });
+ event.target.classList.add('active');
+}
+
+window.onload = function() {
+ if (isRandomMAC(MAC)) {
+  document.getElementById('step1').classList.add('hidden');
+  document.getElementById('step0').classList.remove('hidden');
+ }
+};
 
 function submitPhone() {
  var phone = document.getElementById('phone').value.replace(/\D/g,'');
@@ -104,20 +163,16 @@ function submitPhone() {
 }
 
 function tryLogin() {
- clearInterval(timer);
  clearInterval(countdown);
  document.getElementById('mkForm').submit();
 }
 
 function startCountdown() {
- secs = 10;
+ var secs = 10;
  countdown = setInterval(function(){
   secs--;
   document.getElementById('countdown').textContent = 'Checking in ' + secs + ' seconds...';
-  if (secs <= 0) {
-   clearInterval(countdown);
-   tryLogin();
-  }
+  if (secs <= 0) { clearInterval(countdown); tryLogin(); }
  }, 1000);
 }
 </script>
