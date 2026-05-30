@@ -255,6 +255,7 @@ if (isLoggedIn() && $action === 'change_password') {
 $page = $_GET['page'] ?? 'dashboard';
 
 // Dashboard stats
+$online_count = 0; // Mikrotik API - configured in Session I
 $total_customers  = $db->querySingle("SELECT COUNT(*) FROM customers WHERE status != 'deleted'");
 $active_customers = $db->querySingle("SELECT COUNT(*) FROM customers WHERE status='active'");
 $suspended        = $db->querySingle("SELECT COUNT(*) FROM customers WHERE status='suspended'");
@@ -303,6 +304,17 @@ body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-ser
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow);transition:transform .2s}
 .stat:hover{transform:translateY(-2px)}
+.stat{cursor:pointer}
+.action-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.action-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--text);box-shadow:var(--shadow);transition:all .2s}
+.action-tile:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 4px 20px rgba(14,165,233,.15);color:var(--text)}
+.action-tile-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.action-tile-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:3px}
+.action-tile-value{font-size:22px;font-weight:700;font-family:"IBM Plex Mono",monospace;line-height:1.2}
+.action-tile-sub{font-size:11px;color:var(--muted);margin-top:2px}
+@media(max-width:768px){.action-tiles{grid-template-columns:1fr 1fr}}
+.stat{cursor:pointer}
+.action-tile:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 4px 20px rgba(14,165,233,.15);color:var(--text)}
 .stat-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 .stat-value{font-size:28px;font-weight:700;font-family:'IBM Plex Mono',monospace;line-height:1.1;margin-top:2px}
 .stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -443,22 +455,77 @@ tbody td{padding:10px 12px;vertical-align:middle}
 
 <?php if($page==='dashboard'): ?>
 <!-- DASHBOARD -->
+<!-- Row 1: Clickable Stats -->
 <div class="stats-grid">
- <div class="stat"><div><div class="stat-label">Total Customers</div><div class="stat-value c-blue"><?=$total_customers?></div></div><div class="stat-icon ci-blue"><i class="fas fa-users"></i></div></div>
- <div class="stat"><div><div class="stat-label">Active</div><div class="stat-value c-green"><?=$active_customers?></div></div><div class="stat-icon ci-green"><i class="fas fa-check-circle"></i></div></div>
- <div class="stat"><div><div class="stat-label">Suspended</div><div class="stat-value c-red"><?=$suspended?></div></div><div class="stat-icon ci-red"><i class="fas fa-ban"></i></div></div>
- <div class="stat"><div><div class="stat-label">Pending Approvals</div><div class="stat-value c-yellow"><?=$pending_count?></div></div><div class="stat-icon ci-yellow"><i class="fas fa-clock"></i></div></div>
- <div class="stat"><div><div class="stat-label">Total Devices</div><div class="stat-value c-purple"><?=$total_devices?></div></div><div class="stat-icon ci-purple"><i class="fas fa-mobile-alt"></i></div></div>
- <div class="stat"><div><div class="stat-label">Expiring (3 days)</div><div class="stat-value c-orange"><?=$expiring_soon?></div></div><div class="stat-icon ci-orange"><i class="fas fa-exclamation-triangle"></i></div></div>
- <div class="stat"><div><div class="stat-label">Expired</div><div class="stat-value c-red"><?=$expired_today?></div></div><div class="stat-icon ci-red"><i class="fas fa-times-circle"></i></div></div>
- <div class="stat"><div><div class="stat-label">Revenue (Month)</div><div class="stat-value c-teal"><?=number_format($revenue_month,0)?></div></div><div class="stat-icon ci-teal"><i class="fas fa-money-bill-wave"></i></div></div>
+ <a href="?page=customers" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Total Customers</div><div class="stat-value c-blue"><?=$total_customers?></div></div>
+  <div class="stat-icon ci-blue"><i class="fas fa-users"></i></div>
+ </a>
+ <a href="?page=customers&filter=active" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Active</div><div class="stat-value c-green"><?=$active_customers?></div></div>
+  <div class="stat-icon ci-green"><i class="fas fa-check-circle"></i></div>
+ </a>
+ <a href="?page=customers&filter=suspended" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Suspended</div><div class="stat-value c-red"><?=$suspended?></div></div>
+  <div class="stat-icon ci-red"><i class="fas fa-ban"></i></div>
+ </a>
+ <a href="?page=hotspot&tab=online" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Online Now</div><div class="stat-value c-green"><?=$online_count?></div></div>
+  <div class="stat-icon ci-green"><i class="fas fa-wifi"></i></div>
+ </a>
+ <a href="?page=devices" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Total Devices</div><div class="stat-value c-purple"><?=$total_devices?></div></div>
+  <div class="stat-icon ci-purple"><i class="fas fa-mobile-alt"></i></div>
+ </a>
+ <a href="?page=hotspot" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Pending</div><div class="stat-value c-yellow"><?=$pending_count?></div></div>
+  <div class="stat-icon ci-yellow"><i class="fas fa-clock"></i></div>
+ </a>
+ <a href="?page=packages&filter=expiring" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Expiring (3d)</div><div class="stat-value c-orange"><?=$expiring_soon?></div></div>
+  <div class="stat-icon ci-orange"><i class="fas fa-exclamation-triangle"></i></div>
+ </a>
+ <a href="?page=packages" class="stat" style="text-decoration:none;color:inherit;display:flex;align-items:center;justify-content:space-between">
+  <div><div class="stat-label">Revenue (Month)</div><div class="stat-value c-teal"><?=number_format($revenue_month,0)?> SAR</div></div>
+  <div class="stat-icon ci-teal"><i class="fas fa-money-bill-wave"></i></div>
+ </a>
 </div>
 
-<?php if($pending_count > 0):?>
-<div class="card" style="border-color:var(--warning)">
- <div class="card-header"><div class="card-title"><i class="fas fa-clock" style="color:var(--warning)"></i> Pending Approvals <span class="badge badge-yellow"><?=$pending_count?> waiting</span></div><a href="?page=hotspot" class="btn btn-warning btn-sm"><i class="fas fa-arrow-right"></i> Review Now</a></div>
+<!-- Row 2: Collections by Staff -->
+<div class="card">
+ <div class="card-header">
+  <div class="card-title"><i class="fas fa-users"></i> Collections by Staff — <?=date("F Y")?></div>
+ </div>
+ <div class="table-wrap"><table>
+  <thead><tr><th>#</th><th>Staff Name</th><th>Packages Sold</th><th style="text-align:right">Total Collected</th><th style="text-align:right">Avg per Package</th></tr></thead>
+  <tbody>
+  <?php
+  $staff_cols = $db->query("SELECT u.fullname, u.username, COUNT(p.id) as cnt, COALESCE(SUM(p.fee),0) as total FROM packages p JOIN users u ON p.created_by=u.id WHERE strftime('%Y-%m',p.created_at)='".date('Y-m')."'  GROUP BY p.created_by ORDER BY total DESC");
+  $si=0; $grand_cnt=0; $grand_total=0;
+  $staff_rows=[];
+  while($sr=$staff_cols->fetchArray(SQLITE3_ASSOC)) $staff_rows[]=$sr;
+  if(empty($staff_rows)):?>
+  <tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">No collections recorded this month</td></tr>
+  <?php else: foreach($staff_rows as $sr): $si++;
+   $grand_cnt+=$sr['cnt']; $grand_total+=$sr['total'];
+   $avg=$sr['cnt']>0?round($sr['total']/$sr['cnt']):0;?>
+  <tr>
+   <td class="mono" style="color:var(--muted)"><?=$si?></td>
+   <td><strong><?=e($sr['fullname'])?></strong><br><span style="font-size:11px;color:var(--muted)"><?=e($sr['username'])?></span></td>
+   <td><span class="badge badge-blue"><?=$sr['cnt']?></span></td>
+   <td style="text-align:right" class="mono c-green"><?=number_format($sr['total'],2)?> SAR</td>
+   <td style="text-align:right" class="mono"><?=$avg?> SAR</td>
+  </tr>
+  <?php endforeach; endif;?>
+  </tbody>
+  <tfoot><tr style="border-top:2px solid var(--border);font-weight:700">
+   <td colspan="2"><strong>TOTAL</strong></td>
+   <td><span class="badge badge-blue"><?=$grand_cnt?></span></td>
+   <td style="text-align:right" class="mono c-teal"><?=number_format($grand_total,2)?> SAR</td>
+   <td style="text-align:right" class="mono"><?=$grand_cnt>0?round($grand_total/$grand_cnt):0?> SAR</td>
+  </tr></tfoot>
+ </table></div>
 </div>
-<?php endif;?>
 
 <?php if($expiring_soon > 0):?>
 <div class="card" style="border-color:var(--warning)">
